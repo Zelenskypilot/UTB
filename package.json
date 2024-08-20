@@ -1,14 +1,14 @@
 {
   "name": "youtube-video-downloader",
   "version": "1.0.0",
-  "description": "A simple Node.js server to download YouTube videos using youtube-dl-exec.",
+  "description": "A simple Node.js server to download YouTube videos using yt-dlp-exec.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
     "express": "^4.18.2",
-    "youtube-dl-exec": "^2.0.0"
+    "yt-dlp-exec": "^0.0.1"
   },
   "author": "",
   "license": "ISC"
