@@ -14,16 +14,19 @@ app.get('/download', async (req, res) => {
     const videoURL = req.query.url;
 
     if (!videoURL || !ytdl.validateURL(videoURL)) {
-        return res.status(400).send('Invalid YouTube URL');
+        return res.status(400).sendFile(path.join(__dirname, 'error.html'));
     }
 
     try {
         const info = await ytdl.getInfo(videoURL);
-        const title = info.videoDetails.title;
-        res.header('Content-Disposition', `attachment; filename="${title}.mp4"`);
-        ytdl(videoURL, { format: 'mp4' }).pipe(res);
+        const format = ytdl.chooseFormat(info.formats, { quality: 'highestvideo' });
+        if (format && format.url) {
+            res.redirect(format.url);  // Redirect the user to the video URL for direct download
+        } else {
+            res.status(500).sendFile(path.join(__dirname, 'error.html'));
+        }
     } catch (error) {
-        res.status(500).send('Failed to download video');
+        res.status(500).sendFile(path.join(__dirname, 'error.html'));
     }
 });
 
