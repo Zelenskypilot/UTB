@@ -7,39 +7,58 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 50px;
-            text-align: center;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
         }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
         input[type="text"] {
-            width: 80%;
+            width: 100%;
             padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
             font-size: 16px;
         }
+
         button {
-            padding: 10px 20px;
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
             font-size: 16px;
             cursor: pointer;
-            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #218838;
         }
     </style>
 </head>
 <body>
-    <h1>YouTube Video Downloader</h1>
-    <p>Enter the YouTube URL below to download the video:</p>
-    <form id="downloadForm">
-        <input type="text" id="urlInput" placeholder="Enter YouTube URL" required />
-        <br>
-        <button type="submit">Download Video</button>
+    <h1>Download YouTube Video</h1>
+    <form action="/download" method="get">
+        <input type="text" name="url" placeholder="Enter YouTube video URL" required>
+        <button type="submit">Download</button>
     </form>
-
-    <script>
-        document.getElementById('downloadForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const url = document.getElementById('urlInput').value;
-            if (url) {
-                window.location.href = `/download?url=${encodeURIComponent(url)}`;
-            }
-        });
-    </script>
 </body>
 </html>
