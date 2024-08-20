@@ -1,15 +1,15 @@
 {
-  "name": "youtube-video-downloader",
+  "name": "ytdlp-nodejs-server",
   "version": "1.0.0",
-  "description": "A simple Node.js server to download YouTube videos using yt-dlp-exec.",
+  "description": "A Node.js server to download YouTube videos using ytdlp-nodejs",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
     "express": "^4.18.2",
-    "yt-dlp-exec": "^0.0.1"
+    "ytdlp-nodejs": "^1.0.0"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Your Name",
+  "license": "MIT"
 }
