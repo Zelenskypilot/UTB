@@ -1,12 +1,12 @@
 const express = require('express');
-const ytdlp = require('yt-dlp-exec');
+const ytdlp = require('ytdlp-nodejs');
+const { createWriteStream } = require('fs');
 const path = require('path');
-const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.static('public')); // Serve static files
+app.use(express.static('.'));
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
@@ -14,32 +14,40 @@ app.get('/', (req, res) => {
 
 app.get('/download', (req, res) => {
     const videoURL = req.query.url;
-    
+    const quality = req.query.quality || '1080p';
+
     if (!videoURL) {
-        return res.status(400).sendFile(path.join(__dirname, 'error.html'));
+        return res.status(400).send('Bad Request: No URL provided.');
     }
 
-    const outputFile = `video-${Date.now()}.mp4`;
+    const filePath = path.join(__dirname, 'downloads', 'video.mp4');
+    const fileStream = createWriteStream(filePath);
 
-    ytdlp(videoURL, {
-        output: outputFile,
-        format: 'bestvideo+bestaudio'
+    ytdlp.download(videoURL, {
+        filter: 'mergevideo',
+        quality: quality,
+        output: {
+            fileName: 'video.mp4',
+            outDir: 'downloads'
+        }
     })
-    .then(() => {
-        res.download(outputFile, (err) => {
+    .on('progress', (data) => {
+        console.log(data);
+    })
+    .on('end', () => {
+        res.download(filePath, 'video.mp4', (err) => {
             if (err) {
-                console.error('Error while downloading video:', err);
-                res.status(500).sendFile(path.join(__dirname, 'error.html'));
+                console.error('Download failed:', err);
+                res.status(500).send('Failed to download video. Please use another method.');
             }
-            fs.unlinkSync(outputFile); // Clean up file after download
         });
     })
-    .catch((error) => {
-        console.error('Error while processing video:', error);
-        res.status(500).sendFile(path.join(__dirname, 'error.html'));
+    .on('error', (err) => {
+        console.error('Error:', err);
+        res.status(500).send('Not found, please use another method.');
     });
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
